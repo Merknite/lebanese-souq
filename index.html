@@ -586,33 +586,106 @@ function updateResultsBar(shown, total) {
 }
 
 /* ──────────────────────────────────────────
+   Search scoring engine
+   ─────────────────────────────────────────
+   Scores are additive. Each token in the
+   query is scored independently so multi-
+   word queries like "red roses bouquet"
+   reward products that match all terms.
+
+   Score table (per token):
+     Category exact match          +100
+     Name starts with token         +80
+     Name whole-word match          +60
+     Shop name exact match          +50
+     Shop name contains token       +20
+     Name substring match           +30
+     Description whole-word match   +10
+     Description substring match    + 5
+
+   Global bonuses (applied once):
+     All tokens matched in name     +40
+     Product is in stock            +10
+     Has a price (not "on request") + 5
+     Has an image                   + 3
+────────────────────────────────────────── */
+function scoreProduct(p, tokens) {
+  const name     = cleanName(p.name).toLowerCase();
+  const shopName = (p.shop_name   || '').toLowerCase();
+  const category = (p.category    || '').toLowerCase();
+  const desc     = (p.description || '').toLowerCase();
+  const inStock  = p.in_stock === true || p.in_stock === 'true' || p.in_stock === 1;
+  const hasPrice = p.price !== null && p.price !== undefined && p.price !== '' && p.price !== 'null';
+  const hasImage = !!(p.image_url || '').trim();
+
+  let score = 0;
+  let allTokensInName = true;
+
+  for (const token of tokens) {
+    let tokenScore = 0;
+    const wordBoundary = new RegExp(`\\b${token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
+
+    // Category
+    if (category === token)                  tokenScore += 100;
+    else if (category.includes(token))       tokenScore +=  60;
+
+    // Name signals
+    if (name.startsWith(token))              tokenScore +=  80;
+    else if (wordBoundary.test(name))        tokenScore +=  60;
+    else if (name.includes(token))           tokenScore +=  30;
+    else                                     allTokensInName = false;
+
+    // Shop signals
+    if (shopName === token)                  tokenScore +=  50;
+    else if (shopName.includes(token))       tokenScore +=  20;
+
+    // Description (low weight — avoids the "floral dress" problem)
+    if (wordBoundary.test(desc))             tokenScore +=  10;
+    else if (desc.includes(token))           tokenScore +=   5;
+
+    // A token that matches nowhere at all → product is irrelevant
+    if (tokenScore === 0) return -1;
+
+    score += tokenScore;
+  }
+
+  // Bonus: every query token appeared in the product name
+  if (allTokensInName && tokens.length > 1) score += 40;
+
+  // Global quality bonuses
+  if (inStock)   score += 10;
+  if (hasPrice)  score +=  5;
+  if (hasImage)  score +=  3;
+
+  return score;
+}
+
+/* ──────────────────────────────────────────
    Filter logic
 ────────────────────────────────────────── */
 function applyFilters() {
-  const q    = searchInput.value.toLowerCase().trim();
+  const raw  = searchInput.value.toLowerCase().trim();
   const shop = shopFilter.value;
   const minP = parseFloat(priceMin.value) || 0;
   const maxP = parseFloat(priceMax.value) || Infinity;
 
-  filtered = allProducts.filter(p => {
-    // Search
-    if (q) {
-      const nameMatch  = cleanName(p.name).toLowerCase().includes(q);
-      const shopMatch  = (p.shop_name || '').toLowerCase().includes(q);
-      const descMatch  = (p.description || '').toLowerCase().includes(q);
-      if (!nameMatch && !shopMatch && !descMatch) return false;
-    }
-    // Category
+  // Tokenise query: split on whitespace, drop empty strings, dedupe
+  const tokens = raw ? [...new Set(raw.split(/\s+/).filter(Boolean))] : [];
+  const hasQuery = tokens.length > 0;
+
+  // 1. Hard filters (binary pass/fail — no scoring involved)
+  let pool = allProducts.filter(p => {
+    // Category tab
     if (activeCat && p.category !== activeCat) return false;
-    // Shop
+    // Shop dropdown
     if (shop && p.shop_name !== shop) return false;
-    // Stock
+    // Stock pills
     if (activeStock !== '') {
       const inStock = p.in_stock === true || p.in_stock === 'true' || p.in_stock === 1;
       if (activeStock === 'true'  && !inStock) return false;
       if (activeStock === 'false' &&  inStock) return false;
     }
-    // Price
+    // Price range
     if (p.price !== null && p.price !== undefined && p.price !== '') {
       const num = parseFloat(String(p.price).replace(/[^0-9.]/g, ''));
       if (!isNaN(num) && num > 0) {
@@ -621,6 +694,21 @@ function applyFilters() {
     }
     return true;
   });
+
+  // 2. Score + rank (only when there's a query)
+  if (hasQuery) {
+    const scored = [];
+    for (const p of pool) {
+      const s = scoreProduct(p, tokens);
+      if (s > 0) scored.push({ p, s });   // score === -1 means no match
+    }
+    // Sort descending by score; stable sort preserves original order on ties
+    scored.sort((a, b) => b.s - a.s);
+    filtered = scored.map(x => x.p);
+  } else {
+    // No query → keep natural order
+    filtered = pool;
+  }
 
   page = 0;
   renderPage(false);
