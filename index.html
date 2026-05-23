@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>سوق — Lebanese Shops</title>
+  <title>Souq — Lebanese Shops</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -112,6 +112,26 @@
       white-space: nowrap;
     }
 
+    /* ── View toggle ── */
+    #view-toggle {
+      display: flex; align-items: center;
+      background: rgba(255,255,255,.15);
+      border-radius: 100px;
+      padding: 3px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .vt-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 100px;
+      border: none; background: transparent;
+      color: rgba(255,255,255,.65);
+      cursor: pointer; transition: all .15s;
+    }
+    .vt-btn.active { background: rgba(255,255,255,.25); color: #fff; }
+    .vt-btn:hover:not(.active) { color: #fff; }
+
     /* ── Filter drawer ── */
     #filters {
       background: var(--white);
@@ -201,7 +221,7 @@
     }
     #results-bar strong { color: var(--ink); }
 
-    /* ── Grid ── */
+    /* ── Grid view ── */
     #grid {
       display: grid;
       padding: 18px 32px 60px;
@@ -266,7 +286,10 @@
       font-size: .68rem; font-weight: 700;
       color: var(--cedar);
       text-transform: uppercase; letter-spacing: .8px;
+      text-decoration: none;
+      display: inline-block;
     }
+    a.card-shop:hover { text-decoration: underline; }
     .card-name {
       font-size: .87rem; font-weight: 600;
       line-height: 1.35; flex: 1;
@@ -303,15 +326,14 @@
     .buy-btn svg { opacity: .8; flex-shrink: 0; }
 
     /* ── Empty state ── */
-    #empty {
-      display: none;
+    .empty-state {
       grid-column: 1 / -1;
       text-align: center;
       padding: 80px 20px;
       color: var(--muted);
     }
-    #empty .empty-icon { font-size: 4rem; margin-bottom: 16px; display: block; }
-    #empty h3 { font-family: var(--font-display); font-size: 1.4rem; color: var(--ink); margin-bottom: 8px; }
+    .empty-icon { font-size: 4rem; margin-bottom: 16px; display: block; }
+    .empty-state h3 { font-family: var(--font-display); font-size: 1.4rem; color: var(--ink); margin-bottom: 8px; }
 
     /* ── Loading ── */
     #loading {
@@ -352,6 +374,73 @@
     #load-more:hover { background: var(--cedar); color: #fff; }
     #load-more:disabled { opacity: .3; cursor: default; }
 
+    /* ── Shop-grouped view ── */
+    #shop-grid {
+      display: none;
+      padding: 18px 32px 60px;
+    }
+
+    .shop-section { margin-bottom: 40px; }
+    .shop-section-header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .shop-section-left { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+    .shop-section-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .shop-section-count {
+      font-size: .75rem; color: var(--muted); font-weight: 500; white-space: nowrap;
+    }
+    .shop-homepage-link {
+      font-size: .75rem; font-weight: 600;
+      color: var(--cedar); text-decoration: none;
+      display: flex; align-items: center; gap: 4px;
+      white-space: nowrap; flex-shrink: 0;
+      opacity: .85; transition: opacity .15s;
+    }
+    .shop-homepage-link:hover { opacity: 1; text-decoration: underline; }
+
+    .shop-row {
+      display: flex; gap: 14px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .shop-row::-webkit-scrollbar { height: 4px; }
+    .shop-row::-webkit-scrollbar-track { background: transparent; }
+    .shop-row::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .shop-row .card { flex: 0 0 190px; min-width: 0; }
+
+    .shop-see-all {
+      flex: 0 0 110px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px;
+      background: var(--sand);
+      border-radius: var(--radius-md);
+      border: 1.5px dashed var(--border);
+      font-family: var(--font-body);
+      font-size: .8rem; font-weight: 700;
+      color: var(--cedar);
+      cursor: pointer;
+      text-align: center;
+      padding: 20px 10px;
+      line-height: 1.4;
+      transition: all .15s;
+      border: none; /* reset button border */
+      border: 1.5px dashed var(--border);
+    }
+    .shop-see-all:hover { background: var(--cedar-glow); border-color: var(--cedar); }
+
     /* ── Mobile ── */
     @media (max-width: 700px) {
       header { padding: 0 16px; gap: 10px; }
@@ -363,7 +452,10 @@
       #cat-tabs { padding: 12px 16px 0; }
       #results-bar { padding: 10px 16px 0; }
       #grid { padding: 14px 16px 40px; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; }
+      #shop-grid { padding: 14px 16px 40px; }
       #load-more-wrap { padding-bottom: 40px; }
+      .shop-row .card { flex: 0 0 155px; }
+      .shop-section-header { flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -374,7 +466,7 @@
   <div class="header-brand">
     <h1>
       <span>Lebanese</span>
-      سوق Souq
+      Souq
     </h1>
   </div>
   <div class="header-right">
@@ -385,6 +477,14 @@
       <input id="header-search" type="search" placeholder="Search products, shops…" autocomplete="off" />
     </div>
     <div id="count-badge">— products</div>
+    <div id="view-toggle">
+      <button class="vt-btn active" data-view="grid" title="Grid view">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </button>
+      <button class="vt-btn" data-view="shops" title="Browse by shop">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -430,37 +530,42 @@
 
 <!-- ── Loading / Error ── -->
 <div id="loading"><div class="spinner"></div>Loading products…</div>
-<div id="error">⚠️ Could not load products.json</div>
+<div id="error"></div>
 
-<!-- ── Grid ── -->
+<!-- ── Grid view ── -->
 <div id="grid"></div>
+
+<!-- ── Shop-grouped view ── -->
+<div id="shop-grid"></div>
 
 <!-- ── Load more ── -->
 <div id="load-more-wrap" style="display:none">
   <button id="load-more">Load more products</button>
 </div>
 
-
 <script>
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    Config
-────────────────────────────────────────── */
-const PAGE_SIZE = 48;
+──────────────────────────────────────── */
+const PAGE_SIZE    = 48;
+const SHOP_PREVIEW = 8;
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    State
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 let allProducts = [];
 let filtered    = [];
 let page        = 0;
 let activeStock = '';
 let activeCat   = '';
+let activeView  = 'grid'; // 'grid' | 'shops'
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    DOM refs
-────────────────────────────────────────── */
-const $ = id => document.getElementById(id);
+──────────────────────────────────────── */
+const $            = id => document.getElementById(id);
 const grid         = $('grid');
+const shopGrid     = $('shop-grid');
 const loading      = $('loading');
 const errorEl      = $('error');
 const resultsBar   = $('results-bar');
@@ -473,17 +578,16 @@ const priceMin     = $('price-min');
 const priceMax     = $('price-max');
 const searchInput  = $('header-search');
 
-/* ──────────────────────────────────────────
-   Placeholder (inline SVG data URL)
-────────────────────────────────────────── */
+/* ────────────────────────────────────────
+   Placeholder SVG
+──────────────────────────────────────── */
 const PLACEHOLDER = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f0ebe0'/%3E%3Ctext x='200' y='230' text-anchor='middle' font-size='120' fill='%23d4cfc4'%3E%F0%9F%9B%8D%EF%B8%8F%3C/text%3E%3C/svg%3E`;
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    Helpers
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function cleanName(raw) {
   if (!raw) return 'Untitled product';
-  // Strip " | Site Name" or " - Site Name" SEO suffixes
   let s = raw.trim();
   const pipeIdx = s.indexOf(' | ');
   if (pipeIdx > 10) s = s.slice(0, pipeIdx).trim();
@@ -507,24 +611,33 @@ function formatPrice(raw, currency) {
 }
 
 const arrowSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+const extSVG   = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
-/* ──────────────────────────────────────────
+function esc(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ────────────────────────────────────────
    Card HTML
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function cardHTML(p, animDelay) {
   const name    = cleanName(p.name);
   const price   = formatPrice(p.price, p.currency);
   const imgSrc  = (p.image_url || '').trim();
   const url     = p.product_url || p.shop_url || '#';
+  const shopUrl = (p.shop_url || '').trim();
   const inStock = p.in_stock === true || p.in_stock === 'true' || p.in_stock === 1;
 
   const imgTag = imgSrc
-    ? `<img class="card-img" src="${imgSrc.replace(/"/g,'&quot;')}" alt="" loading="lazy"
-          onerror="this.onerror=null;this.src='${PLACEHOLDER}'">`
+    ? `<img class="card-img" src="${esc(imgSrc)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER}'">`
     : `<div class="card-img-placeholder">🛍️</div>`;
 
   const oosBadge = (!inStock && p.in_stock !== null && p.in_stock !== undefined && p.in_stock !== '')
     ? `<div class="out-of-stock-badge">Out of stock</div>` : '';
+
+  const shopTag = shopUrl
+    ? `<a class="card-shop" href="${esc(shopUrl)}" target="_blank" rel="noopener noreferrer">${esc(p.shop_name)}</a>`
+    : `<div class="card-shop">${esc(p.shop_name)}</div>`;
 
   return `<div class="card" style="animation-delay:${animDelay}ms">
     <div class="card-img-wrap">
@@ -532,34 +645,29 @@ function cardHTML(p, animDelay) {
       ${oosBadge}
     </div>
     <div class="card-body">
-      <div class="card-shop">${(p.shop_name || '').replace(/</g,'&lt;')}</div>
-      <div class="card-name" title="${name.replace(/"/g,'&quot;').replace(/</g,'&lt;')}">${name.replace(/</g,'&lt;')}</div>
+      ${shopTag}
+      <div class="card-name" title="${esc(name)}">${esc(name)}</div>
       <div class="card-price ${price ? '' : 'na'}">${price || 'Price on request'}</div>
     </div>
     <div class="card-footer">
-      <a class="buy-btn" href="${url.replace(/"/g,'&quot;')}" target="_blank" rel="noopener noreferrer">
+      <a class="buy-btn" href="${esc(url)}" target="_blank" rel="noopener noreferrer">
         View product ${arrowSVG}
       </a>
     </div>
   </div>`;
 }
 
-/* ──────────────────────────────────────────
-   Render
-────────────────────────────────────────── */
-function renderPage(append = false) {
+/* ────────────────────────────────────────
+   Grid render (paginated)
+──────────────────────────────────────── */
+function renderPage(append) {
   const start = page * PAGE_SIZE;
   const slice = filtered.slice(start, start + PAGE_SIZE);
 
   if (!append) grid.innerHTML = '';
 
   if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div id="empty">
-        <span class="empty-icon">🔍</span>
-        <h3>No products found</h3>
-        <p>Try different keywords or clear the filters.</p>
-      </div>`;
+    grid.innerHTML = `<div class="empty-state"><span class="empty-icon">🔍</span><h3>No products found</h3><p>Try different keywords or clear the filters.</p></div>`;
     loadMoreWrap.style.display = 'none';
     updateResultsBar(0, 0);
     return;
@@ -571,44 +679,116 @@ function renderPage(append = false) {
   page++;
   const shown = Math.min(page * PAGE_SIZE, filtered.length);
   updateResultsBar(shown, filtered.length);
+  loadMoreWrap.style.display = shown < filtered.length ? 'block' : 'none';
+  loadMoreBtn.disabled = shown >= filtered.length;
+}
 
-  const hasMore = shown < filtered.length;
-  loadMoreWrap.style.display = hasMore ? 'block' : 'none';
-  loadMoreBtn.disabled = !hasMore;
+/* ────────────────────────────────────────
+   Shop-grouped render
+──────────────────────────────────────── */
+function renderShopView() {
+  shopGrid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    shopGrid.innerHTML = `<div class="empty-state"><span class="empty-icon">🔍</span><h3>No products found</h3><p>Try different keywords or clear the filters.</p></div>`;
+    updateResultsBar(0, 0);
+    return;
+  }
+
+  // Group products by shop, preserving current sort order
+  const shopMap = new Map();
+  for (const p of filtered) {
+    const key = p.shop_name || '—';
+    if (!shopMap.has(key)) shopMap.set(key, { shopUrl: (p.shop_url || '').trim(), products: [] });
+    shopMap.get(key).products.push(p);
+  }
+
+  let idx = 0;
+  for (const [shopName, { shopUrl, products }] of shopMap) {
+    const preview  = products.slice(0, SHOP_PREVIEW);
+    const overflow = products.length - SHOP_PREVIEW;
+
+    const homepageLink = shopUrl
+      ? `<a class="shop-homepage-link" href="${esc(shopUrl)}" target="_blank" rel="noopener noreferrer">Visit shop ${extSVG}</a>`
+      : '';
+
+    const seeAllBtn = overflow > 0
+      ? `<button class="shop-see-all" onclick="filterByShop(${JSON.stringify(shopName)})">
+           ${arrowSVG}
+           See all<br>${products.length} products
+         </button>`
+      : '';
+
+    const cardsHTML = preview.map((p, i) => cardHTML(p, i * 20)).join('');
+
+    shopGrid.insertAdjacentHTML('beforeend', `
+      <div class="shop-section" style="animation: fadeUp .3s ease ${idx * 40}ms both">
+        <div class="shop-section-header">
+          <div class="shop-section-left">
+            <div class="shop-section-name">${esc(shopName)}</div>
+            <div class="shop-section-count">${products.length.toLocaleString()} product${products.length !== 1 ? 's' : ''}</div>
+          </div>
+          ${homepageLink}
+        </div>
+        <div class="shop-row">${cardsHTML}${seeAllBtn}</div>
+      </div>`);
+
+    idx++;
+  }
+
+  resultsBar.innerHTML = `Showing <strong>${shopMap.size.toLocaleString()}</strong> shop${shopMap.size !== 1 ? 's' : ''}, <strong>${filtered.length.toLocaleString()}</strong> products`;
+}
+
+// "See all" tile click — jump to grid view filtered to that shop
+function filterByShop(shopName) {
+  shopFilter.value = shopName;
+  switchView('grid');
+  applyFilters();
 }
 
 function updateResultsBar(shown, total) {
-  if (total === 0) {
-    resultsBar.innerHTML = '';
-    return;
-  }
+  if (total === 0) { resultsBar.innerHTML = ''; return; }
   resultsBar.innerHTML = `Showing <strong>${shown.toLocaleString()}</strong> of <strong>${total.toLocaleString()}</strong> products`;
 }
 
-/* ──────────────────────────────────────────
-   Search scoring engine
-   ─────────────────────────────────────────
-   Scores are additive. Each token in the
-   query is scored independently so multi-
-   word queries like "red roses bouquet"
-   reward products that match all terms.
+/* ────────────────────────────────────────
+   View switching
+──────────────────────────────────────── */
+function switchView(v) {
+  activeView = v;
+  document.querySelectorAll('.vt-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
 
+  if (v === 'grid') {
+    grid.style.display     = '';
+    shopGrid.style.display = 'none';
+    page = 0;
+    renderPage(false);
+  } else {
+    grid.style.display     = 'none';
+    shopGrid.style.display = 'block';
+    loadMoreWrap.style.display = 'none';
+    renderShopView();
+  }
+}
+
+/* ────────────────────────────────────────
+   Search scoring engine
    Score table (per token):
      Category exact match          +100
+     Category contains token        +60
      Name starts with token         +80
      Name whole-word match          +60
+     Name substring match           +30
      Shop name exact match          +50
      Shop name contains token       +20
-     Name substring match           +30
      Description whole-word match   +10
      Description substring match    + 5
-
-   Global bonuses (applied once):
+   Global bonuses:
      All tokens matched in name     +40
-     Product is in stock            +10
-     Has a price (not "on request") + 5
-     Has an image                   + 3
-────────────────────────────────────────── */
+     In stock                       +10
+     Has price                      + 5
+     Has image                      + 3
+──────────────────────────────────────── */
 function scoreProduct(p, tokens) {
   const name     = cleanName(p.name).toLowerCase();
   const shopName = (p.shop_name   || '').toLowerCase();
@@ -623,102 +803,85 @@ function scoreProduct(p, tokens) {
 
   for (const token of tokens) {
     let tokenScore = 0;
-    const wordBoundary = new RegExp(`\\b${token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
+    const re = new RegExp('\\b' + token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
 
-    // Category
-    if (category === token)                  tokenScore += 100;
-    else if (category.includes(token))       tokenScore +=  60;
+    if (category === token)            tokenScore += 100;
+    else if (category.includes(token)) tokenScore +=  60;
 
-    // Name signals
-    if (name.startsWith(token))              tokenScore +=  80;
-    else if (wordBoundary.test(name))        tokenScore +=  60;
-    else if (name.includes(token))           tokenScore +=  30;
-    else                                     allTokensInName = false;
+    if (name.startsWith(token))        tokenScore +=  80;
+    else if (re.test(name))            tokenScore +=  60;
+    else if (name.includes(token))     tokenScore +=  30;
+    else                               allTokensInName = false;
 
-    // Shop signals
-    if (shopName === token)                  tokenScore +=  50;
-    else if (shopName.includes(token))       tokenScore +=  20;
+    if (shopName === token)            tokenScore +=  50;
+    else if (shopName.includes(token)) tokenScore +=  20;
 
-    // Description (low weight — avoids the "floral dress" problem)
-    if (wordBoundary.test(desc))             tokenScore +=  10;
-    else if (desc.includes(token))           tokenScore +=   5;
+    if (re.test(desc))                 tokenScore +=  10;
+    else if (desc.includes(token))     tokenScore +=   5;
 
-    // A token that matches nowhere at all → product is irrelevant
-    if (tokenScore === 0) return -1;
-
+    if (tokenScore === 0) return -1; // no match anywhere — exclude
     score += tokenScore;
   }
 
-  // Bonus: every query token appeared in the product name
   if (allTokensInName && tokens.length > 1) score += 40;
-
-  // Global quality bonuses
-  if (inStock)   score += 10;
-  if (hasPrice)  score +=  5;
-  if (hasImage)  score +=  3;
+  if (inStock)  score += 10;
+  if (hasPrice) score +=  5;
+  if (hasImage) score +=  3;
 
   return score;
 }
 
-/* ──────────────────────────────────────────
-   Filter logic
-────────────────────────────────────────── */
+/* ────────────────────────────────────────
+   Filter & re-render
+──────────────────────────────────────── */
 function applyFilters() {
   const raw  = searchInput.value.toLowerCase().trim();
   const shop = shopFilter.value;
   const minP = parseFloat(priceMin.value) || 0;
   const maxP = parseFloat(priceMax.value) || Infinity;
-
-  // Tokenise query: split on whitespace, drop empty strings, dedupe
   const tokens = raw ? [...new Set(raw.split(/\s+/).filter(Boolean))] : [];
-  const hasQuery = tokens.length > 0;
 
-  // 1. Hard filters (binary pass/fail — no scoring involved)
+  // Hard filters
   let pool = allProducts.filter(p => {
-    // Category tab
     if (activeCat && p.category !== activeCat) return false;
-    // Shop dropdown
     if (shop && p.shop_name !== shop) return false;
-    // Stock pills
     if (activeStock !== '') {
       const inStock = p.in_stock === true || p.in_stock === 'true' || p.in_stock === 1;
       if (activeStock === 'true'  && !inStock) return false;
       if (activeStock === 'false' &&  inStock) return false;
     }
-    // Price range
     if (p.price !== null && p.price !== undefined && p.price !== '') {
       const num = parseFloat(String(p.price).replace(/[^0-9.]/g, ''));
-      if (!isNaN(num) && num > 0) {
-        if (num < minP || num > maxP) return false;
-      }
+      if (!isNaN(num) && num > 0 && (num < minP || num > maxP)) return false;
     }
     return true;
   });
 
-  // 2. Score + rank (only when there's a query)
-  if (hasQuery) {
+  // Score & sort when there's a query
+  if (tokens.length > 0) {
     const scored = [];
     for (const p of pool) {
       const s = scoreProduct(p, tokens);
-      if (s > 0) scored.push({ p, s });   // score === -1 means no match
+      if (s > 0) scored.push({ p, s });
     }
-    // Sort descending by score; stable sort preserves original order on ties
     scored.sort((a, b) => b.s - a.s);
     filtered = scored.map(x => x.p);
   } else {
-    // No query → keep natural order
     filtered = pool;
   }
 
   page = 0;
-  renderPage(false);
+  if (activeView === 'shops') {
+    renderShopView();
+  } else {
+    renderPage(false);
+  }
 }
 
-/* ──────────────────────────────────────────
-   Populate dropdowns & tabs
-────────────────────────────────────────── */
+/* ────────────────────────────────────────
+   Populate UI from data
+──────────────────────────────────────── */
 function populateUI(products) {
-  // Category tabs
   const cats = [...new Set(products.map(p => p.category).filter(Boolean))].sort();
   cats.forEach(c => {
     const btn = document.createElement('button');
@@ -728,7 +891,6 @@ function populateUI(products) {
     catTabsEl.appendChild(btn);
   });
 
-  // Shop dropdown
   const shops = [...new Set(products.map(p => p.shop_name).filter(Boolean))].sort();
   shops.forEach(s => {
     const o = document.createElement('option');
@@ -736,15 +898,21 @@ function populateUI(products) {
     shopFilter.appendChild(o);
   });
 
-  // Count badge
   countBadge.textContent = `${products.length.toLocaleString()} products`;
 }
 
-/* ──────────────────────────────────────────
-   Event wiring
-────────────────────────────────────────── */
+/* ────────────────────────────────────────
+   Events
+──────────────────────────────────────── */
 
-// Search — debounced
+// View toggle
+document.getElementById('view-toggle').addEventListener('click', e => {
+  const btn = e.target.closest('.vt-btn');
+  if (!btn || btn.dataset.view === activeView) return;
+  switchView(btn.dataset.view);
+});
+
+// Search (debounced)
 let searchTimer;
 searchInput.addEventListener('input', () => {
   clearTimeout(searchTimer);
@@ -761,7 +929,7 @@ catTabsEl.addEventListener('click', e => {
   applyFilters();
 });
 
-// Shop
+// Shop dropdown
 shopFilter.addEventListener('change', applyFilters);
 
 // Price
@@ -796,13 +964,13 @@ $('clear-btn').addEventListener('click', () => {
 // Load more
 loadMoreBtn.addEventListener('click', () => renderPage(true));
 
-/* ──────────────────────────────────────────
-   Boot — fetch products.json
-────────────────────────────────────────── */
+/* ────────────────────────────────────────
+   Boot
+──────────────────────────────────────── */
 (async () => {
   try {
     const res = await fetch('products.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     allProducts = await res.json();
     filtered    = allProducts;
     loading.style.display = 'none';
@@ -811,7 +979,7 @@ loadMoreBtn.addEventListener('click', () => renderPage(true));
   } catch (err) {
     loading.style.display = 'none';
     errorEl.style.display = 'block';
-    errorEl.textContent   = `⚠️ Could not load products.json — ${err.message}. Make sure it is in the same directory as this file.`;
+    errorEl.textContent   = '⚠️ Could not load products.json — ' + err.message + '. Make sure it is in the same directory as this file.';
   }
 })();
 </script>
