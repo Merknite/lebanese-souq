@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Souq — Lebanese Shops</title>
+  <title>سوق — Lebanese Shops</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -267,11 +267,6 @@
       color: var(--cedar);
       text-transform: uppercase; letter-spacing: .8px;
     }
-    .card-shop-link {
-      text-decoration: none;
-      display: inline-block;
-    }
-    .card-shop-link:hover { text-decoration: underline; }
     .card-name {
       font-size: .87rem; font-weight: 600;
       line-height: 1.35; flex: 1;
@@ -357,98 +352,6 @@
     #load-more:hover { background: var(--cedar); color: #fff; }
     #load-more:disabled { opacity: .3; cursor: default; }
 
-    /* ── View toggle ── */
-    #view-toggle {
-      display: flex; align-items: center;
-      background: rgba(255,255,255,.15);
-      border-radius: 100px;
-      padding: 3px;
-      gap: 2px;
-      flex-shrink: 0;
-    }
-    .vt-btn {
-      display: flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px;
-      border-radius: 100px;
-      border: none; background: transparent;
-      color: rgba(255,255,255,.65);
-      cursor: pointer; transition: all .15s;
-    }
-    .vt-btn.active { background: rgba(255,255,255,.25); color: #fff; }
-    .vt-btn:hover:not(.active) { color: #fff; }
-
-    /* ── Shop-grouped layout ── */
-    #shop-grid { display: none; padding: 18px 32px 60px; }
-    #shop-grid.visible { display: block; }
-
-    .shop-section { margin-bottom: 36px; }
-    .shop-section-header {
-      display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1.5px solid var(--border);
-    }
-    .shop-section-name {
-      font-family: var(--font-display);
-      font-size: 1.1rem; font-weight: 700;
-      color: var(--ink);
-    }
-    .shop-section-meta {
-      display: flex; align-items: center; gap: 14px;
-    }
-    .shop-section-count {
-      font-size: .75rem; color: var(--muted); font-weight: 500;
-    }
-    .shop-homepage-link {
-      font-size: .75rem; font-weight: 600;
-      color: var(--cedar); text-decoration: none;
-      letter-spacing: .3px;
-      display: flex; align-items: center; gap: 4px;
-      opacity: .85; transition: opacity .15s;
-    }
-    .shop-homepage-link:hover { opacity: 1; text-decoration: underline; }
-
-    .shop-row {
-      display: flex; gap: 14px;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
-      padding-bottom: 6px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .shop-row::-webkit-scrollbar { height: 4px; }
-    .shop-row::-webkit-scrollbar-track { background: transparent; }
-    .shop-row::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-    .shop-row .card {
-      flex: 0 0 190px;
-      min-width: 0;
-    }
-
-    .shop-see-all {
-      flex: 0 0 120px;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--sand);
-      border-radius: var(--radius-md);
-      border: 1.5px dashed var(--border);
-      font-size: .8rem; font-weight: 700;
-      color: var(--cedar);
-      cursor: pointer;
-      text-align: center;
-      padding: 20px 10px;
-      line-height: 1.4;
-      transition: all .15s;
-      flex-direction: column; gap: 8px;
-    }
-    .shop-see-all:hover { background: var(--cedar-glow); border-color: var(--cedar); }
-    .shop-see-all svg { opacity: .7; }
-
-    @media (max-width: 700px) {
-      #shop-grid { padding: 14px 16px 40px; }
-      .shop-section-header { flex-wrap: wrap; gap: 6px; }
-      .shop-row .card { flex: 0 0 155px; }
-    }
-
     /* ── Mobile ── */
     @media (max-width: 700px) {
       header { padding: 0 16px; gap: 10px; }
@@ -471,7 +374,7 @@
   <div class="header-brand">
     <h1>
       <span>Lebanese</span>
-      Souq
+      سوق Souq
     </h1>
   </div>
   <div class="header-right">
@@ -482,14 +385,6 @@
       <input id="header-search" type="search" placeholder="Search products, shops…" autocomplete="off" />
     </div>
     <div id="count-badge">— products</div>
-    <div id="view-toggle" title="Toggle view">
-      <button class="vt-btn active" data-view="grid" aria-label="Grid view">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      </button>
-      <button class="vt-btn" data-view="shops" aria-label="Browse by shop">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-      </button>
-    </div>
   </div>
 </header>
 
@@ -540,9 +435,6 @@
 <!-- ── Grid ── -->
 <div id="grid"></div>
 
-<!-- ── Shop-grouped view ── -->
-<div id="shop-grid"></div>
-
 <!-- ── Load more ── -->
 <div id="load-more-wrap" style="display:none">
   <button id="load-more">Load more products</button>
@@ -563,14 +455,12 @@ let filtered    = [];
 let page        = 0;
 let activeStock = '';
 let activeCat   = '';
-let activeView  = 'grid'; // 'grid' | 'shops'
 
 /* ──────────────────────────────────────────
    DOM refs
 ────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
 const grid         = $('grid');
-const shopGrid     = $('shop-grid');
 const loading      = $('loading');
 const errorEl      = $('error');
 const resultsBar   = $('results-bar');
@@ -628,10 +518,7 @@ function cardHTML(p, animDelay) {
   const url     = p.product_url || p.shop_url || '#';
   const inStock = p.in_stock === true || p.in_stock === 'true' || p.in_stock === 1;
 
-  const shopUrl  = (p.shop_url || '').trim();
-  const shopTag  = shopUrl
-    ? `<a class="card-shop card-shop-link" href="${shopUrl.replace(/"/g,'&quot;')}" target="_blank" rel="noopener noreferrer">${(p.shop_name || '').replace(/</g,'&lt;')}</a>`
-    : `<div class="card-shop">${(p.shop_name || '').replace(/</g,'&lt;')}</div>`;
+  const imgTag = imgSrc
     ? `<img class="card-img" src="${imgSrc.replace(/"/g,'&quot;')}" alt="" loading="lazy"
           onerror="this.onerror=null;this.src='${PLACEHOLDER}'">`
     : `<div class="card-img-placeholder">🛍️</div>`;
@@ -645,7 +532,7 @@ function cardHTML(p, animDelay) {
       ${oosBadge}
     </div>
     <div class="card-body">
-      ${shopTag}
+      <div class="card-shop">${(p.shop_name || '').replace(/</g,'&lt;')}</div>
       <div class="card-name" title="${name.replace(/"/g,'&quot;').replace(/</g,'&lt;')}">${name.replace(/</g,'&lt;')}</div>
       <div class="card-price ${price ? '' : 'na'}">${price || 'Price on request'}</div>
     </div>
@@ -774,110 +661,6 @@ function scoreProduct(p, tokens) {
 }
 
 /* ──────────────────────────────────────────
-   Switch between grid and shop-grouped views
-────────────────────────────────────────── */
-function setView(v) {
-  activeView = v;
-  document.querySelectorAll('.vt-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
-
-  if (v === 'grid') {
-    grid.style.display     = '';
-    loadMoreWrap.style.display = filtered.length > PAGE_SIZE ? 'block' : 'none';
-    shopGrid.classList.remove('visible');
-    shopGrid.style.display = 'none';
-  } else {
-    grid.style.display     = 'none';
-    loadMoreWrap.style.display = 'none';
-    shopGrid.style.display = '';
-    shopGrid.classList.add('visible');
-    renderShopView();
-  }
-}
-
-/* ──────────────────────────────────────────
-   Shop-grouped renderer
-   Shows up to 8 product cards per shop in a
-   horizontally scrollable row, with a "See
-   all N →" tile when there are more.
-────────────────────────────────────────── */
-const SHOP_PREVIEW = 8;
-
-function renderShopView() {
-  shopGrid.innerHTML = '';
-
-  if (filtered.length === 0) {
-    shopGrid.innerHTML = `
-      <div id="empty" style="display:block">
-        <span class="empty-icon">🔍</span>
-        <h3>No products found</h3>
-        <p>Try different keywords or clear the filters.</p>
-      </div>`;
-    return;
-  }
-
-  // Group by shop, preserving score-sorted order within each shop
-  const shopMap = new Map();
-  for (const p of filtered) {
-    const key = p.shop_name || '—';
-    if (!shopMap.has(key)) shopMap.set(key, { url: p.shop_url || '', products: [] });
-    shopMap.get(key).products.push(p);
-  }
-
-  const externalSVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
-  const arrowRSVG  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
-
-  let sectionIdx = 0;
-  for (const [shopName, { url, products }] of shopMap) {
-    const preview  = products.slice(0, SHOP_PREVIEW);
-    const overflow = products.length - SHOP_PREVIEW;
-    const shopEsc  = shopName.replace(/</g, '&lt;').replace(/"/g, '&quot;');
-    const urlEsc   = url.replace(/"/g, '&quot;');
-
-    const homepageLink = url
-      ? `<a class="shop-homepage-link" href="${urlEsc}" target="_blank" rel="noopener noreferrer">
-           Visit shop ${externalSVG}
-         </a>`
-      : '';
-
-    const cardsHTML = preview.map((p, i) => cardHTML(p, i * 20)).join('');
-
-    const seeAllTile = overflow > 0
-      ? `<button class="shop-see-all" data-shop="${shopEsc}" onclick="filterByShop('${shopEsc}')">
-           ${arrowRSVG}
-           See all<br>${products.length} products
-         </button>`
-      : '';
-
-    shopGrid.insertAdjacentHTML('beforeend', `
-      <div class="shop-section" style="animation: fadeUp .3s ease ${sectionIdx * 40}ms both">
-        <div class="shop-section-header">
-          <div class="shop-section-name">${shopEsc}</div>
-          <div class="shop-section-meta">
-            <span class="shop-section-count">${products.length.toLocaleString()} product${products.length !== 1 ? 's' : ''}</span>
-            ${homepageLink}
-          </div>
-        </div>
-        <div class="shop-row">
-          ${cardsHTML}
-          ${seeAllTile}
-        </div>
-      </div>`);
-
-    sectionIdx++;
-  }
-
-  // Update results bar with shop count
-  resultsBar.innerHTML = `Showing <strong>${shopMap.size.toLocaleString()}</strong> shop${shopMap.size !== 1 ? 's' : ''}, <strong>${filtered.length.toLocaleString()}</strong> products`;
-}
-
-// Called by "See all N →" tile — switches to grid view filtered to that shop
-function filterByShop(shopName) {
-  shopFilter.value = shopName;
-  setView('grid');
-  applyFilters();
-}
-
-/* ──────────────────────────────────────────
    Filter logic
 ────────────────────────────────────────── */
 function applyFilters() {
@@ -928,11 +711,7 @@ function applyFilters() {
   }
 
   page = 0;
-  if (activeView === 'shops') {
-    renderShopView();
-  } else {
-    renderPage(false);
-  }
+  renderPage(false);
 }
 
 /* ──────────────────────────────────────────
@@ -964,13 +743,6 @@ function populateUI(products) {
 /* ──────────────────────────────────────────
    Event wiring
 ────────────────────────────────────────── */
-
-// View toggle
-document.getElementById('view-toggle').addEventListener('click', e => {
-  const btn = e.target.closest('.vt-btn');
-  if (!btn || btn.dataset.view === activeView) return;
-  setView(btn.dataset.view);
-});
 
 // Search — debounced
 let searchTimer;
